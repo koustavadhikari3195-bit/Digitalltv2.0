@@ -6,7 +6,7 @@ import dj_database_url
 from .base import *  # noqa: F401, F403
 import os
 
-DEBUG = False
+DEBUG = True # DIAGNOSTIC MODE
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["digitally-v2.vercel.app", ".vercel.app"])
 
 # Database — Supabase PostgreSQL
