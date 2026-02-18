@@ -16,16 +16,45 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@700;800&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CDN for utility classes (dev) — replace with compiled build for production -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    {% if debug %}
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            orange: '#FF6B00',
+                            black: '#000000',
+                            white: '#FFFFFF',
+                            'gray-1': '#0A0A0A',
+                            'gray-2': '#141414',
+                            'gray-3': '#A0A0A0',
+                        },
+                        fontFamily: {
+                            display: ['Syne', 'sans-serif'],
+                            body: ['DM Sans', 'sans-serif'],
+                        },
+                    }
+                }
+            }
+        </script>
+    {% else %}
+        <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    {% endif %}
 
     <!-- Core Styles -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animations.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
 
     {% block head_extra %}{% endblock %}
 </head>
 
 <body class="bg-black text-white antialiased">
+    <div class="noise-overlay" aria-hidden="true"></div>
+    <div id="cursor-dot" aria-hidden="true"></div>
+    <div id="cursor-ring" aria-hidden="true"></div>
 
     <!-- Command Center Strip -->
     {% include "partials/_command_center.html" %}
@@ -70,6 +99,7 @@
     <script src="{% static 'js/popup_manager.js' %}"></script>
     <script src="{% static 'js/chatbot.js' %}"></script>
     <script src="{% static 'js/command_center.js' %}"></script>
+    <script src="{% static 'js/motion.js' %}" defer></script>
 
     {% block scripts_extra %}{% endblock %}
 </body>

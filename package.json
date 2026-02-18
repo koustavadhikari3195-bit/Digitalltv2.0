@@ -1,0 +1,15 @@
+{
+    "name": "digitally-v2",
+    "version": "1.0.0",
+    "description": "Django + Tailwind CSS",
+    "main": "index.js",
+    "scripts": {
+        "build:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "tailwindcss": "^3.4.1"
+    }
+}

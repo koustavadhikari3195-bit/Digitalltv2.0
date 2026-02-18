@@ -154,7 +154,9 @@ def roast_view(request):
 
         return HttpResponse(
             f'<div class="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 text-sm '
-            f'text-[#E0E0E0] leading-relaxed roast-output">{critique_html}</div>'
+            f'text-[#E0E0E0] leading-relaxed roast-output">'
+            f'<div class="overflow-x-auto">{critique_html}</div>'
+            f'</div>'
         )
     except Exception as e:
         log_failure("roast_view", str(e), {"url": url, "ip": ip}, exc=e)

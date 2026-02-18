@@ -4,9 +4,10 @@ PostgreSQL (Supabase), Redis cache, HTTPS enforcement.
 """
 import dj_database_url
 from .base import *  # noqa: F401, F403
+import os
 
 DEBUG = False
-ALLOWED_HOSTS = env("ALLOWED_HOSTS")  # noqa: F405
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["digitally-v2.vercel.app", ".vercel.app"])
 
 # Database — Supabase PostgreSQL
 DATABASES = {
@@ -14,8 +15,13 @@ DATABASES = {
         default=env("DATABASE_URL", default=""),  # noqa: F405
         conn_max_age=600,
         ssl_require=True,
+        engine="django.db.backends.postgresql",
     )
 }
+DATABASES["default"]["OPTIONS"] = {"options": "-c search_path=public"}
+# Disable server-side cursors for request-pooling (Supabase/PgBouncer)
+DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
+
 
 # Cache — Redis for production
 CACHES = {
@@ -27,6 +33,22 @@ CACHES = {
         # "LOCATION": env("REDIS_URL", default="redis://127.0.0.1:6379/1"),
     }
 }
+
+# Static files - Whitenoise
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # Insert after SecurityMiddleware
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Media Files — Supabase Storage (S3)
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="media")
+AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
+AWS_S3_REGION_NAME = "us-east-1"  # Supabase uses this region for compatibility
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
 
 # Security
 SECURE_SSL_REDIRECT = True

@@ -1,0 +1,296 @@
+{# ═══════════════════════════════════════════════
+DIGITALLY — Contact Form Section
+Include at BOTTOM of templates/website/index.html:
+{% include "partials/_contact_form.html" %}
+═══════════════════════════════════════════════ #}
+
+<section id="contact" style="padding:128px 24px;position:relative;overflow:hidden;background:#000;">
+
+    {# Background grid + orange blooms #}
+    <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;
+       background-image:linear-gradient(rgba(255,107,0,0.025) 1px,transparent 1px),
+       linear-gradient(90deg,rgba(255,107,0,0.025) 1px,transparent 1px);
+       background-size:64px 64px;"></div>
+    <div aria-hidden="true" style="position:absolute;top:-200px;left:-200px;width:600px;height:600px;
+       background:radial-gradient(circle,rgba(255,107,0,0.07) 0%,transparent 70%);
+       pointer-events:none;"></div>
+    <div aria-hidden="true" style="position:absolute;bottom:-200px;right:-200px;width:500px;height:500px;
+       background:radial-gradient(circle,rgba(255,107,0,0.04) 0%,transparent 70%);
+       pointer-events:none;"></div>
+
+    <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;" class="max-w-5xl mx-auto">
+
+        {# ── Section Header ── #}
+        <div class="reveal" style="margin-bottom:72px;">
+            <p style="color:#FF6B00;font-family:'DM Mono',monospace;font-size:11px;
+                font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;">
+                Start a Project
+            </p>
+            <h2 style="font-family:'Syne',sans-serif;font-weight:900;
+                 font-size:clamp(2.5rem,6vw,5.5rem);line-height:.92;
+                 color:#fff;margin-bottom:20px;">
+                Let's Build<br>
+                <span style="color:#FF6B00;">Something Real.</span>
+            </h2>
+            <p style="color:#A0A0A0;font-size:17px;max-width:500px;line-height:1.75;">
+                Tell us what you need. No vague discovery calls before we know if we're a fit.
+                We respond within 24 hours — with a plan, not a pitch deck.
+            </p>
+        </div>
+
+        {# ── Form Card ── #}
+        <div class="reveal" style="background:#0A0A0A;border:1px solid rgba(255,255,255,0.07);
+                               border-radius:20px;padding:52px;max-width:860px;margin:0 auto;">
+
+            {# Step Progress #}
+            <div style="display:flex;align-items:flex-start;margin-bottom:28px;">
+                {% for num, label in step_labels %}
+                <div class="step-dot {% if forloop.first %}active{% endif %}"
+                    style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+                    <div class="step-dot-num" style="width:34px;height:34px;border-radius:50%;display:flex;
+                      align-items:center;justify-content:center;
+                      font-family:'Syne',sans-serif;font-weight:800;font-size:13px;
+                      border:1.5px solid rgba(255,255,255,0.1);color:#555;
+                      transition:all 300ms ease;">{{ num }}</div>
+                    <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:600;
+                       letter-spacing:.12em;text-transform:uppercase;color:#555;
+                       white-space:nowrap;transition:color 300ms ease;">{{ label }}</span>
+                </div>
+                {% if not forloop.last %}
+                <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);
+                    margin-top:17px;"></div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            {# Progress bar #}
+            <div style="height:2px;background:rgba(255,255,255,0.05);
+                  border-radius:2px;margin-bottom:40px;overflow:hidden;">
+                <div id="form-progress-bar" style="height:100%;width:33%;background:#FF6B00;border-radius:2px;
+                    transition:width 500ms cubic-bezier(0.23,1,0.32,1);"></div>
+            </div>
+
+            {# FORM #}
+            <form id="contact-form" hx-post="{% url 'website:full_inquiry' %}" hx-target="#contact-form-response"
+                hx-swap="innerHTML" hx-encoding="application/x-www-form-urlencoded">
+                {% csrf_token %}
+
+                {# ━━━ STEP 1: ABOUT YOU ━━━ #}
+                <div class="form-step" id="step-1">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+                        <div class="form-group">
+                            <label class="form-label" for="f-name">Full Name *</label>
+                            <input class="form-input" type="text" id="f-name" name="name" required maxlength="100"
+                                placeholder="Alex Rivera" autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="f-email">Work Email *</label>
+                            <input class="form-input" type="email" id="f-email" name="email" required maxlength="254"
+                                placeholder="alex@company.com" autocomplete="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="f-company">Company / Brand</label>
+                            <input class="form-input" type="text" id="f-company" name="company" maxlength="100"
+                                placeholder="Acme Corp">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="f-phone">Phone</label>
+                            <input class="form-input" type="tel" id="f-phone" name="phone" maxlength="20"
+                                placeholder="+91 98765 43210" autocomplete="tel">
+                        </div>
+
+                        <div class="form-group" style="grid-column:1/-1;">
+                            <label class="form-label" for="f-website">Current Website</label>
+                            <input class="form-input" type="url" id="f-website" name="website" maxlength="2000"
+                                placeholder="https://yoursite.com">
+                            <p style="font-size:11px;color:#444;margin-top:6px;font-family:'DM Mono',monospace;">
+                                We'll review it before our call. Roast-ready.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:4px;">
+                        <label class="form-label">You Are *</label>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                            {% for role in "Business Owner,Marketing Manager,Startup Founder,Agency
+                            Partner,Freelancer,Other"|split:"," %}
+                            <label style="position:relative;">
+                                <input type="radio" name="role" value="{{ role }}"
+                                    style="position:absolute;opacity:0;width:0;height:0;" {% if forloop.first
+                                    %}required{% endif %}>
+                                <span class="budget-pill-label">{{ role }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:flex-end;margin-top:36px;">
+                        <button type="button" class="btn-magnetic btn-primary btn-ripple btn-next"
+                            data-magnet-strength="0.3">
+                            <span class="btn-inner">Continue
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" style="margin-left:4px;vertical-align:middle;">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                {# ━━━ STEP 2: YOUR GOALS ━━━ #}
+                <div class="form-step" id="step-2" style="display:none;">
+
+                    <div class="form-group">
+                        <label class="form-label">Services You Need</label>
+                        <p style="font-size:11px;color:#555;font-family:'DM Mono',monospace;margin-bottom:14px;">
+                            Select all that apply
+                        </p>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;">
+                            {% for value, icon, label in service_options %}
+                            <label style="position:relative;">
+                                <input type="checkbox" name="services" value="{{ value }}"
+                                    style="position:absolute;opacity:0;width:0;height:0;" class="service-cb">
+                                <span class="service-check-label">
+                                    <span class="check-box">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000"
+                                            stroke-width="3" style="stroke-dasharray:100;stroke-dashoffset:100;">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                    </span>
+                                    <span style="font-size:16px;">{{ icon }}</span>
+                                    {{ label }}
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="f-goals">Your #1 Business Goal Right Now *</label>
+                        <textarea class="form-input" id="f-goals" name="goals" required maxlength="1000" rows="5"
+                            style="resize:vertical;font-family:'DM Sans',sans-serif;"
+                            placeholder="E.g. We need 50 qualified leads/month. Our website looks like 2015 and our competitors are winning online. We haven't touched social in 6 months..."></textarea>
+                        <p style="font-size:11px;color:#444;margin-top:6px;font-family:'DM Mono',monospace;">
+                            Be specific. Vague briefs get vague proposals.
+                        </p>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:36px;">
+                        <button type="button" class="btn-magnetic btn-ghost btn-ripple btn-back"
+                            data-magnet-strength="0.25" style="padding:12px 24px;font-size:13px;">← Back</button>
+                        <button type="button" class="btn-magnetic btn-primary btn-ripple btn-next"
+                            data-magnet-strength="0.3">
+                            <span class="btn-inner">Almost Done →</span>
+                        </button>
+                    </div>
+                </div>
+
+                {# ━━━ STEP 3: SCOPE & BUDGET ━━━ #}
+                <div class="form-step" id="step-3" style="display:none;">
+
+                    <div class="form-group">
+                        <label class="form-label">Monthly Budget *</label>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                            {% for budget in "Under ₹10K,₹10K–₹25K,₹25K–₹50K,₹50K–₹1L,₹1L+,Let's discuss"|split:"," %}
+                            <label style="position:relative;">
+                                <input type="radio" name="budget" value="{{ budget }}" required
+                                    style="position:absolute;opacity:0;width:0;height:0;">
+                                <span class="budget-pill-label">{{ budget }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Ideal Start Timeline *</label>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+                            {% for tl in "ASAP,Within 2 weeks,1 month,2–3 months,Still planning"|split:"," %}
+                            <label style="position:relative;">
+                                <input type="radio" name="timeline" value="{{ tl }}" required
+                                    style="position:absolute;opacity:0;width:0;height:0;">
+                                <span class="budget-pill-label">{{ tl }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="f-source">How Did You Find Us?</label>
+                        <div style="position:relative;">
+                            <select class="form-input" id="f-source" name="source_channel"
+                                style="appearance:none;padding-right:40px;">
+                                <option value="" disabled selected>Select one</option>
+                                <option value="google">Google Search</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="linkedin">LinkedIn</option>
+                                <option value="referral">Referral / Word of mouth</option>
+                                <option value="roast_tool">Used the Roast My Site tool</option>
+                                <option value="chatbot">Chatbot conversation</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <svg style="position:absolute;right:14px;top:50%;transform:translateY(-50%);
+                          pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A0A0A0"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="f-notes">Anything Else?</label>
+                        <textarea class="form-input" id="f-notes" name="notes" maxlength="2000" rows="3"
+                            style="resize:vertical;font-family:'DM Sans',sans-serif;"
+                            placeholder="Hard deadlines, past agency experiences, competitors to know about..."></textarea>
+                    </div>
+
+                    <p style="font-size:11px;color:#444;font-family:'DM Mono',monospace;
+                    line-height:1.7;margin-bottom:28px;">
+                        By submitting you agree to us contacting you about your project.
+                        No data is sold, shared, or spammed. Ever.
+                    </p>
+
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <button type="button" class="btn-magnetic btn-ghost btn-ripple btn-back"
+                            data-magnet-strength="0.25" style="padding:12px 24px;font-size:13px;">← Back</button>
+                        <button type="submit" class="btn-submit btn-ripple" style="width:auto;padding:17px 56px;">
+                            Send It →
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <div id="contact-form-response" style="margin-top:24px;min-height:20px;"></div>
+        </div>
+
+        {# ── Alternate contact strip ── #}
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+                max-width:860px;margin:28px auto 0;" class="reveal stagger-children">
+            {% for icon, title, sub, href in contact_alternates %}
+            <a href="{{ href }}" {% if 'http' in href %} target="_blank" rel="noopener" {% endif %} style="display:flex;align-items:center;gap:16px;padding:20px;
+                background:#0A0A0A;border:1px solid rgba(255,255,255,0.05);
+                border-radius:12px;text-decoration:none;
+                transition:border-color 250ms ease,transform 250ms cubic-bezier(.34,1.56,.64,1);" class="btn-magnetic"
+                data-magnet-strength="0.15"
+                onmouseenter="this.style.cssText+=';border-color:rgba(255,107,0,.3);transform:translateY(-2px);'"
+                onmouseleave="this.style.borderColor='rgba(255,255,255,.05)';this.style.transform='';">
+                <div style="width:42px;height:42px;background:rgba(255,107,0,.08);
+                    border:1px solid rgba(255,107,0,.2);border-radius:50%;flex-shrink:0;
+                    display:flex;align-items:center;justify-content:center;font-size:18px;">
+                    {{ icon }}
+                </div>
+                <div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;
+                      color:#fff;margin-bottom:3px;">{{ title }}</div>
+                    <div style="font-size:12px;color:#555;font-family:'DM Mono',monospace;">{{ sub }}</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>

@@ -98,7 +98,22 @@ SERVICES = [
 
 def services_context(request):
     """Inject the service catalog into every template context."""
+
+def contact_form_context(request):
+    """Provides metadata for the 3-step project inquiry form."""
     return {
-        "services": SERVICES,
-        "is_production": not settings.DEBUG,
+        "step_labels": [(1, "About You"), (2, "Your Goals"), (3, "Scope & Budget")],
+        "service_options": [
+            ("website_management", "🖥", "Website Management"),
+            ("social_media", "📣", "Social Media"),
+            ("seo", "🔍", "SEO"),
+            ("content_marketing", "✍️", "Content Marketing"),
+            ("graphic_design", "🎨", "Graphic Design"),
+            ("full_package", "⭐", "Full Package"),
+        ],
+        "contact_alternates": [
+            ("📧", "Email Us", "hello@digitally.in", "mailto:hello@digitally.in"),
+            ("💬", "WhatsApp", "Quick conversations", "https://wa.me/919999999999"),
+            ("📅", "Book a Call", "15-min discovery call", "https://cal.com/digitally"),
+        ],
     }

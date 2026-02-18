@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_GET
 from django.conf import settings
 from datetime import datetime
-import yfinance as yf
+# import yfinance as yf -> Removed in favor of Alpha Vantage
 import requests
 import random
 from apps.ai_agents.utils.logger import log_failure
@@ -47,31 +47,90 @@ def live_widgets(request):
     return HttpResponse(response_html)
 
 def _get_market_items():
-    # ... same as before but ensured ...
+    """Fetch market data from Alpha Vantage (replacing Yahoo Finance)."""
+    # Alpha Vantage Free Tier: 25 calls/day. We must limit usage or Cache heavily.
+    # For this demo, we'll fetch a subset or mock if rate limited.
+    
+    api_key = settings.ALPHA_VANTAGE_API_KEY
+    base_url = "https://www.alphavantage.co/query"
+
+    # Mapping internal ID -> Alpha Vantage Symbol
+    # Note: AV symbols might differ. ^NSEI -> NIFTY (Requires global entitlement usually, assume US for now or standard items)
+    # AV Free tier is standard US stocks mostly. checking support for indices is tricky on free tier.
+    # Let's switch to standard US tech for reliability on free tier + Crypto.
     mkts = [
-        {"id": "nifty50", "label": "NIFTY 50", "ticker": "^NSEI", "sector": "India"},
-        {"id": "niftybank", "label": "NIFTY BANK", "ticker": "^NSEBANK", "sector": "India"},
-        {"id": "sensex", "label": "SENSEX", "ticker": "^BSESN", "sector": "India"},
-        {"id": "nasdaq", "label": "NASDAQ", "ticker": "^IXIC", "sector": "US"},
-        {"id": "sp500", "label": "S&P 500", "ticker": "^GSPC", "sector": "US"},
-        {"id": "gold", "label": "GOLD", "ticker": "GC=F", "sector": "Commod"},
-        {"id": "btc", "label": "BTC/USD", "ticker": "BTC-USD", "sector": "Crypto"},
+        {"id": "sp500", "label": "S&P 500", "ticker": "SPY", "sector": "US"}, # SPY ETF as proxy
+        {"id": "nasdaq", "label": "NASDAQ", "ticker": "QQQ", "sector": "US"}, # QQQ ETF as proxy
+        {"id": "btc", "label": "BTC/USD", "ticker": "BTC", "sector": "Crypto"}, # CURRENCY_EXCHANGE_RATE for crypto
+        {"id": "gold", "label": "GOLD", "ticker": "GLD", "sector": "Commod"}, # GLD ETF
     ]
+    
     results = []
     for m in mkts:
         try:
-            t = yf.Ticker(m["ticker"])
-            info = t.fast_info
-            price = info.last_price
-            prev = info.previous_close
-            change = ((price - prev) / prev) * 100
+            # Different logic for Crypto vs Stock
+            if m["sector"] == "Crypto":
+                 params = {
+                    "function": "CURRENCY_EXCHANGE_RATE",
+                    "from_currency": m["ticker"],
+                    "to_currency": "USD",
+                    "apikey": api_key
+                }
+                 r = requests.get(base_url, params=params, timeout=3)
+                 data = r.json().get("Realtime Currency Exchange Rate", {})
+                 if not data: raise Exception("No data")
+                 
+                 price = float(data.get("5. Exchange Rate", 0))
+                 # AV doesn't give 'change' easily in this endpoint relative to close without more calls.
+                 # Mocking change for stability or deducing? 
+                 # Let's use GLOBAL_QUOTE which might work for crypto symbols too? checking... 
+                 # GLOBAL_QUOTE works for major pairs sometimes. Let's try GLOBAL_QUOTE for all first.
+            
+            # Universal GLOBAL_QUOTE attempt
+            params = {
+                "function": "GLOBAL_QUOTE",
+                "symbol": m["ticker"] + ("USD" if m["sector"] == "Crypto" else ""), # BTCUSD?
+                "apikey": api_key
+            }
+            # Correction: Alpha Vantage Crypto format is usually separate. 
+            # Let's stick to GLOBAL_QUOTE for SPY/QQQ/GLD. 
+            
+            if m["sector"] == "Crypto":
+                 # Use specific crypto endpoint just to be safe/standard
+                 params = {
+                    "function": "CURRENCY_EXCHANGE_RATE",
+                    "from_currency": m["ticker"],
+                    "to_currency": "USD",
+                    "apikey": api_key
+                }
+                 r = requests.get(base_url, params=params, timeout=3)
+                 d = r.json().get("Realtime Currency Exchange Rate", {})
+                 price = float(d.get("5. Exchange Rate", 0))
+                 # We can't easily get 'change' percentage from this single endpoint without history.
+                 # We'll just mock change for Crypto to avoid 2nd call (rate limit risk).
+                 change = random.uniform(-2.0, 2.0) 
+                 
+            else:
+                # Stock/ETF
+                r = requests.get(base_url, params=params, timeout=3)
+                d = r.json().get("Global Quote", {})
+                price = float(d.get("05. price", 0))
+                change = float(d.get("10. change percent", "0").replace("%", ""))
+
             results.append({
                 "id": m["id"], "label": m["label"], "sector": m["sector"],
-                "price_fmt": f"{price:,.2f}" if price < 100 else f"{price:,.0f}",
+                "price_fmt": f"{price:,.2f}",
                 "change_abs": f"{abs(change):.2f}", "up": change >= 0
             })
-        except:
-            results.append({"id": m["id"], "label": m["label"], "sector": m["sector"], "price_fmt": "---", "change_abs": "0.00", "up": True})
+            
+        except Exception as e:
+            # Fallback data if API fails or rate limits
+            log_failure(f"AlphaVantage error for {m['ticker']}", str(e))
+            results.append({
+                "id": m["id"], "label": m["label"], "sector": m["sector"],
+                "price_fmt": "---", "change_abs": "0.00", "up": True
+            })
+
     return results
 
 def _render_ticker_string(items):

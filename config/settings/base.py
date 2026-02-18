@@ -63,6 +63,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.website.context_processors.services_context",
+                "apps.website.context_processors.contact_form_context",
             ],
         },
     },
@@ -101,6 +102,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # API Keys
 GROQ_API_KEY = env("GROQ_API_KEY", default="")
 WEATHER_API_KEY = env("WEATHER_API_KEY", default="")
+ALPHA_VANTAGE_API_KEY = env("ALPHA_VANTAGE_API_KEY", default="DEY9N80JGIKMYWZB")
 
 # django-axes config
 AXES_FAILURE_LIMIT = 10
