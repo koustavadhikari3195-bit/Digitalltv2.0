@@ -13,6 +13,7 @@ npm run build:css
 
 # Collect static files
 echo "Collecting static files..."
+mkdir -p staticfiles
 python3 manage.py collectstatic --noinput --clear
 
 echo "Build Process Completed!"
