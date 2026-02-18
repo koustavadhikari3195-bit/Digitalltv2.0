@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}DIGITALLY — We Build What You Can't Ignore{% endblock %}
+{% block meta_description %}Premium digital agency offering website management, social media, SEO, content marketing,
+and graphic design. Get a free audit of your digital presence.{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-tag">Premium Digital Agency</span>
+        <h1>
+            We Build What<br>
+            <span class="accent">You Can't Ignore.</span>
+        </h1>
+        <p class="subtitle">
+            Strategy, design, and technology — unified into digital experiences
+            that convert visitors into customers and customers into advocates.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#roast" class="btn-primary">
+                Roast My Website →
+            </a>
+            <a href="#services" class="btn-outline">
+                Explore Services
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SOCIAL PROOF / STATS
+     ═══════════════════════════════════════════ -->
+<section class="py-16 border-y border-white/5">
+    <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+            <p class="text-3xl font-black text-[#FF6B00] font-display">50+</p>
+            <p class="text-sm text-[#A0A0A0] mt-1">Clients Served</p>
+        </div>
+        <div>
+            <p class="text-3xl font-black text-[#FF6B00] font-display">300+</p>
+            <p class="text-sm text-[#A0A0A0] mt-1">Projects Delivered</p>
+        </div>
+        <div>
+            <p class="text-3xl font-black text-[#FF6B00] font-display">98%</p>
+            <p class="text-sm text-[#A0A0A0] mt-1">Client Retention</p>
+        </div>
+        <div>
+            <p class="text-3xl font-black text-[#FF6B00] font-display">24h</p>
+            <p class="text-sm text-[#A0A0A0] mt-1">Response Time</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SERVICES SECTION
+     ═══════════════════════════════════════════ -->
+<section id="services" class="section">
+    <p class="section-tag">What We Do</p>
+    <h2 class="section-title">
+        Five Pillars.<br>
+        <span class="accent">One Agency.</span>
+    </h2>
+    <p class="section-subtitle">
+        Every service is designed to compound. SEO feeds content marketing.
+        Social media feeds lead capture. Design ties it all together.
+    </p>
+
+    <div class="services-grid">
+        {% for service in services %}
+        <div class="service-card">
+            <div class="service-icon">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    {% if service.icon == "server" %}
+                    <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+                    <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+                    <line x1="6" y1="6" x2="6.01" y2="6" />
+                    <line x1="6" y1="18" x2="6.01" y2="18" />
+                    {% elif service.icon == "social" %}
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    {% elif service.icon == "search" %}
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    {% elif service.icon == "document" %}
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    {% elif service.icon == "design" %}
+                    <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                    <path d="M2 2l7.586 7.586" />
+                    <circle cx="11" cy="11" r="2" />
+                    {% endif %}
+                </svg>
+            </div>
+            <h3>{{ service.title }}</h3>
+            <p class="tagline">{{ service.tagline }}</p>
+            <p class="description">{{ service.description }}</p>
+            <ul class="deliverables">
+                {% for item in service.deliverables %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <span class="price">From {{ service.starting_from }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     ROAST MY SITE
+     ═══════════════════════════════════════════ -->
+<section id="roast" class="py-28 px-6 max-w-5xl mx-auto">
+    <p class="text-[#FF6B00] text-xs font-mono tracking-[0.2em] uppercase mb-4">Free Tool</p>
+    <h2 class="text-4xl md:text-6xl font-black text-white leading-none mb-4">
+        We'll Roast<br>
+        <span class="text-[#FF6B00]">Your Website.</span>
+    </h2>
+    <p class="text-[#A0A0A0] text-lg mb-10 max-w-2xl">
+        Paste your URL. Our AI will give it a brutal, honest critique — then tell you
+        exactly how we'd fix it. Takes 10 seconds.
+    </p>
+
+    <form hx-post="/ai/roast/" hx-target="#roast-result" hx-swap="innerHTML" hx-indicator="#roast-spinner"
+        class="flex flex-col sm:flex-row gap-3 max-w-xl">
+        {% csrf_token %}
+        <input type="url" name="url" required placeholder="https://yoursite.com" class="flex-1 bg-[#141414] border border-white/10 rounded-xl px-5 py-4 text-white
+                  placeholder-[#555] focus:outline-none focus:border-[#FF6B00] transition-colors text-sm">
+        <button type="submit" class="bg-[#FF6B00] text-black px-7 py-4 rounded-xl font-bold text-sm
+                   hover:bg-orange-500 transition-colors relative min-w-[160px]">
+            <span id="roast-spinner" class="htmx-indicator">
+                <svg class="animate-spin w-4 h-4 mx-auto" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="60"
+                        stroke-dashoffset="15" />
+                </svg>
+            </span>
+            <span class="htmx-hide-on-request">Roast It →</span>
+        </button>
+    </form>
+
+    <div id="roast-result" class="mt-10"></div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     PROCESS / HOW WE WORK
+     ═══════════════════════════════════════════ -->
+<section class="py-28 px-6 max-w-5xl mx-auto border-t border-white/5">
+    <p class="text-[#FF6B00] text-xs font-mono tracking-[0.2em] uppercase mb-4">How It Works</p>
+    <h2 class="text-4xl md:text-5xl font-black text-white leading-none mb-16">
+        Simple Process.<br>
+        <span class="text-[#FF6B00]">Serious Results.</span>
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-8">
+        <div
+            class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-[#FF6B00]/20 transition-all">
+            <div
+                class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#FF6B00] to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+            <span class="text-[#FF6B00] text-5xl font-black font-display opacity-20 absolute top-4 right-6">01</span>
+            <h3 class="text-lg font-black mb-3 font-display relative z-10">Discovery Call</h3>
+            <p class="text-[#A0A0A0] text-sm leading-relaxed relative z-10">
+                15 minutes. We listen, ask sharp questions, and figure out where you're
+                leaking revenue. No pitch deck. No fluff.
+            </p>
+        </div>
+
+        <div
+            class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-[#FF6B00]/20 transition-all">
+            <div
+                class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#FF6B00] to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+            <span class="text-[#FF6B00] text-5xl font-black font-display opacity-20 absolute top-4 right-6">02</span>
+            <h3 class="text-lg font-black mb-3 font-display relative z-10">Custom Strategy</h3>
+            <p class="text-[#A0A0A0] text-sm leading-relaxed relative z-10">
+                We build a roadmap tailored to your budget and goals. You approve every
+                milestone before we start working.
+            </p>
+        </div>
+
+        <div
+            class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-[#FF6B00]/20 transition-all">
+            <div
+                class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#FF6B00] to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+            <span class="text-[#FF6B00] text-5xl font-black font-display opacity-20 absolute top-4 right-6">03</span>
+            <h3 class="text-lg font-black mb-3 font-display relative z-10">Execute & Report</h3>
+            <p class="text-[#A0A0A0] text-sm leading-relaxed relative z-10">
+                We do the work. You get monthly reports with real numbers.
+                No vanity metrics. No excuses.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     CONTACT / CTA SECTION
+     ═══════════════════════════════════════════ -->
+<section id="contact" class="cta-section relative">
+    <div class="relative z-10 max-w-2xl mx-auto">
+        <p class="text-[#FF6B00] text-xs font-mono tracking-[0.2em] uppercase mb-4">Ready?</p>
+        <h2 class="text-4xl md:text-6xl font-black text-white leading-none mb-6">
+            Let's Build Something<br>
+            <span class="text-[#FF6B00]">Worth Talking About.</span>
+        </h2>
+        <p class="text-[#A0A0A0] text-lg mb-10 max-w-lg mx-auto leading-relaxed">
+            Drop us a line. We'll respond within 24 hours with an honest assessment
+            of how we can help — or a referral to someone who can.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="mailto:hello@digitally.in" class="btn-primary text-lg px-8 py-4">
+                hello@digitally.in
+            </a>
+            <a href="https://cal.com" target="_blank" rel="noopener" class="btn-outline text-lg px-8 py-4">
+                Book a Call →
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

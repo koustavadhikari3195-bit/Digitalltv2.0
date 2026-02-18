@@ -1,0 +1,27 @@
+<!-- Command Center — loads async, never blocks paint -->
+<div id="command-center"
+     hx-get="/widgets/live/"
+     hx-trigger="load delay:500ms"
+     hx-swap="innerHTML"
+     hx-vals='js:{lat: window._geo?.lat || "", lon: window._geo?.lon || ""}'
+     hx-headers='{"X-Widget-Client": "1"}'
+     class="w-full bg-[#0A0A0A] border-b border-white/5 py-2 px-6 text-xs text-[#A0A0A0]
+            font-mono overflow-hidden">
+  <span class="animate-pulse">● Initializing command center...</span>
+</div>
+
+<script>
+// Grab geolocation BEFORE the HTMX trigger fires
+window._geo = {};
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      window._geo = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      // Retrigger with actual coords
+      htmx.trigger(document.getElementById('command-center'), 'load');
+    },
+    () => { /* denied — widget will use fallback data */ },
+    { timeout: 3000 }
+  );
+}
+</script>

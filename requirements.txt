@@ -1,0 +1,18 @@
+# Framework
+django>=4.2,<5.0
+django-environ==0.11.2
+dj-database-url==2.1.0
+psycopg2-binary==2.9.9
+
+# Security
+django-csp==3.8
+django-axes==6.3.0
+
+# HTMX Integration
+django-htmx==1.17.2
+
+# AI & Scraping
+groq==0.13.0
+beautifulsoup4==4.12.3
+requests==2.31.0
+yfinance==0.2.36

@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DIGITALLY — Premium Digital Agency{% endblock %}</title>
+    <meta name="description"
+        content="{% block meta_description %}DIGITALLY is a premium digital agency offering website management, social media, SEO, content marketing, and graphic design services.{% endblock %}">
+
+    <!-- Fonts — self-hosted, ZERO external requests -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CDN for utility classes (dev) — replace with compiled build for production -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body class="bg-black text-white antialiased">
+
+    <!-- Command Center Strip -->
+    {% include "partials/_command_center.html" %}
+
+    <!-- Navigation -->
+    <nav class="nav-main">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">DIGITAL<span>LY</span></a>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#roast">Free Roast</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li>
+                    <a href="#contact" class="btn-primary" style="padding: 0.625rem 1.25rem; font-size: 0.8125rem;">
+                        Get Started →
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 DIGITALLY. All rights reserved. Built with obsessive attention to detail.</p>
+    </footer>
+
+    <!-- Gatekeeper Modal -->
+    {% include "partials/_gatekeeper_modal.html" %}
+
+    <!-- Chatbot Widget -->
+    {% include "partials/_chatbot_widget.html" %}
+
+    <!-- HTMX — self-hosted -->
+    <script src="{% static 'js/htmx.min.js' %}"></script>
+
+    <!-- App Scripts -->
+    <script src="{% static 'js/popup_manager.js' %}"></script>
+    <script src="{% static 'js/chatbot.js' %}"></script>
+
+    {% block scripts_extra %}{% endblock %}
+</body>
+
+</html>

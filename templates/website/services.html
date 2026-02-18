@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Services — DIGITALLY{% endblock %}
+{% block meta_description %}Explore DIGITALLY's five service pillars: Website Management, Social Media, SEO, Content
+Marketing, and Graphic Design. Premium digital services starting from ₹5,000.{% endblock %}
+
+{% block content %}
+
+<section class="py-28 px-6 max-w-5xl mx-auto">
+    <p class="text-[#FF6B00] text-xs font-mono tracking-[0.2em] uppercase mb-4">Our Services</p>
+    <h1 class="text-4xl md:text-6xl font-black text-white leading-none mb-4">
+        Everything You Need.<br>
+        <span class="text-[#FF6B00]">Nothing You Don't.</span>
+    </h1>
+    <p class="text-[#A0A0A0] text-lg mb-16 max-w-2xl leading-relaxed">
+        Five service pillars. Each one designed to compound on the others.
+        Pick one or take them all — the system works either way.
+    </p>
+
+    <div class="space-y-8">
+        {% for service in services %}
+        <div class="bg-[#0A0A0A] border border-white/5 rounded-2xl p-8 md:p-10
+                hover:border-[#FF6B00]/20 transition-all group">
+            <div class="flex flex-col md:flex-row md:items-start gap-6">
+                <div class="service-icon flex-shrink-0">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        {% if service.icon == "server" %}
+                        <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+                        <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+                        <line x1="6" y1="6" x2="6.01" y2="6" />
+                        <line x1="6" y1="18" x2="6.01" y2="18" />
+                        {% elif service.icon == "social" %}
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                        {% elif service.icon == "search" %}
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        {% elif service.icon == "document" %}
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        {% elif service.icon == "design" %}
+                        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                        <path d="M2 2l7.586 7.586" />
+                        <circle cx="11" cy="11" r="2" />
+                        {% endif %}
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
+                        <h2 class="text-2xl font-black font-display">{{ service.title }}</h2>
+                        <span class="price mt-2 sm:mt-0">From {{ service.starting_from }}</span>
+                    </div>
+                    <p class="text-[#FF6B00] text-sm mb-3">{{ service.tagline }}</p>
+                    <p class="text-[#A0A0A0] text-sm leading-relaxed mb-5">{{ service.description }}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {% for item in service.deliverables %}
+                        <div class="flex items-center gap-2 text-sm text-white/70">
+                            <svg class="w-3.5 h-3.5 text-[#FF6B00] flex-shrink-0" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20,6 9,17 4,12" />
+                            </svg>
+                            {{ item }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="text-center mt-20">
+        <h3 class="text-2xl font-black font-display mb-4">Ready to start?</h3>
+        <p class="text-[#A0A0A0] text-sm mb-8 max-w-md mx-auto">
+            Every engagement starts with a free 15-minute discovery call. No commitment, no pitch deck.
+        </p>
+        <a href="/#contact" class="btn-primary">
+            Book a Discovery Call →
+        </a>
+    </div>
+</section>
+
+{% endblock %}
