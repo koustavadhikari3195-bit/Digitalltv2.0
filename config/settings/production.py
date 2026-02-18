@@ -6,7 +6,7 @@ import dj_database_url
 from .base import *  # noqa: F401, F403
 import os
 
-DEBUG = True  # TEMPORARY DEBUGGING
+DEBUG = False
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["digitally-v2.vercel.app", ".vercel.app"])
 
 # Database — Supabase PostgreSQL
@@ -39,6 +39,9 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "digitally-prod-cache",
+        # Switch to Redis when available:
+        # "BACKEND": "django_redis.cache.RedisCache",
+        # "LOCATION": env("REDIS_URL", default="redis://127.0.0.1:6379/1"),
     }
 }
 
@@ -47,8 +50,7 @@ if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# Relaxed storage for debugging (prevents manifest missing errors)
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media Files — Supabase Storage (S3)
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
