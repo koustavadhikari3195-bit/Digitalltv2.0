@@ -50,7 +50,8 @@ if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
     MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Relaxed storage to prevent 500 server errors if a file is missing
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Media Files — Supabase Storage (S3)
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
