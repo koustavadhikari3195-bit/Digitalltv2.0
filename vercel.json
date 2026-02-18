@@ -1,35 +1,13 @@
 {
     "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "config/wsgi.py",
-            "use": "@vercel/python"
+            "source": "/static/(.*)",
+            "destination": "/static/$1"
         },
         {
-            "src": "api/health.py",
-            "use": "@vercel/python"
-        },
-        {
-            "src": "api/debug_django.py",
-            "use": "@vercel/python"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/static/(.*)",
-            "dest": "/static/$1"
-        },
-        {
-            "src": "/api/health",
-            "dest": "/api/health.py"
-        },
-        {
-            "src": "/api/debug_django",
-            "dest": "/api/debug_django.py"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/config/wsgi.py"
+            "source": "/(.*)",
+            "destination": "/api/index.py"
         }
     ]
 }
