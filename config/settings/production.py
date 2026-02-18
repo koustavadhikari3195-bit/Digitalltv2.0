@@ -10,17 +10,28 @@ DEBUG = False
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["digitally-v2.vercel.app", ".vercel.app"])
 
 # Database — Supabase PostgreSQL
-DATABASES = {
-    "default": dj_database_url.config(
-        default=env("DATABASE_URL", default=""),  # noqa: F405
-        conn_max_age=600,
-        ssl_require=True,
-        engine="django.db.backends.postgresql",
-    )
-}
-DATABASES["default"]["OPTIONS"] = {"options": "-c search_path=public"}
-# Disable server-side cursors for request-pooling (Supabase/PgBouncer)
-DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
+DATABASE_URL = env("DATABASE_URL", default=None)
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+            engine="django.db.backends.postgresql",
+        )
+    }
+    DATABASES["default"]["OPTIONS"] = {"options": "-c search_path=public"}
+    # Disable server-side cursors for request-pooling (Supabase/PgBouncer)
+    DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
+else:
+    # Fallback to SQLite for build-time or if DB_URL is missing
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
+    }
 
 
 # Cache — Redis for production
@@ -35,7 +46,8 @@ CACHES = {
 }
 
 # Static files - Whitenoise
-MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # Insert after SecurityMiddleware
+if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
+    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
