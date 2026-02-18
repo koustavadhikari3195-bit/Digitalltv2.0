@@ -98,6 +98,7 @@ SERVICES = [
 
 def services_context(request):
     """Inject the service catalog into every template context."""
+    return {"SERVICES": SERVICES}
 
 def contact_form_context(request):
     """Provides metadata for the 3-step project inquiry form."""
