@@ -4,7 +4,8 @@
     "description": "Django + Tailwind CSS",
     "main": "index.js",
     "scripts": {
-        "build:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify"
+        "build:css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+        "vercel-build": "bash build_files.sh"
     },
     "keywords": [],
     "author": "",
