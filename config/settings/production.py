@@ -37,6 +37,7 @@ CACHES = {
 # Static files - Whitenoise
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # Insert after SecurityMiddleware
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media Files — Supabase Storage (S3)
