@@ -98,4 +98,7 @@ SERVICES = [
 
 def services_context(request):
     """Inject the service catalog into every template context."""
-    return {"services": SERVICES}
+    return {
+        "services": SERVICES,
+        "is_production": not settings.DEBUG,
+    }

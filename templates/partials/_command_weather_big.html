@@ -1,0 +1,33 @@
+<div class="weather-big">
+    <div class="flex justify-between items-start">
+        <div>
+            <div class="font-mono text-[10px] text-[#FF6B00] tracking-[0.15em] mb-2">
+                📍 {{ weather.city }}, {{ weather.country }}
+            </div>
+            <div class="font-display font-black text-[56px] leading-none text-white">
+                {{ weather.temp }}<span class="text-2xl text-[#555]">°C</span>
+            </div>
+            <div class="text-[#A0A0A0] text-sm mt-2">{{ weather.description }}</div>
+            <div class="text-[#555] text-[12px] mt-1">Feels like {{ weather.feels_like }}°C</div>
+        </div>
+        <div class="text-[64px] leading-none">{{ weather.icon_emoji }}</div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mt-5 pt-4 border-t border-white/6">
+        <div class="text-center">
+            <div class="text-lg mb-1">💧</div>
+            <div class="font-mono text-[11px] text-[#555]">Humidity</div>
+            <div class="text-[13px] text-white font-semibold">{{ weather.humidity }}%</div>
+        </div>
+        <div class="text-center">
+            <div class="text-lg mb-1">💨</div>
+            <div class="font-mono text-[11px] text-[#555]">Wind</div>
+            <div class="text-[13px] text-white font-semibold">{{ weather.wind_speed }} km/h</div>
+        </div>
+        <div class="text-center">
+            <div class="text-lg mb-1">☀️</div>
+            <div class="font-mono text-[11px] text-[#555]">UV Index</div>
+            <div class="text-[13px] text-white font-semibold">{{ weather.uv_index|default:"5" }}/10</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+<div id="command-panel" class="hidden fixed top-[48px] left-0 right-0 z-[999] bg-[#080808] border-b border-[#FF6B00]/15
+            shadow-[0_20px_80px_rgba(0,0,0,0.9)] animate-panelDrop">
+
+    <!-- Panel Header -->
+    <div class="flex items-center justify-between px-6 py-3.5 border-b border-white/5 bg-[#FF6B00]/3">
+        <div class="flex items-center gap-5">
+            <span class="font-display font-black text-[11px] tracking-[0.18em] text-[#FF6B00] uppercase">
+                Command Center
+            </span>
+            <div class="flex gap-0.5">
+                <button class="tab-btn active" data-tab="markets">📈 Markets</button>
+                <button class="tab-btn" data-tab="weather">🌤 Weather</button>
+                <button class="tab-btn" data-tab="intel">⚡ Live Intel</button>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="live-dot"></div>
+            <span class="font-mono text-[10px] text-[#555]">Live · Updates via HTMX</span>
+            <button id="cmd-panel-close" class="ml-2 bg-white/5 border border-white/8 rounded-md px-2.5 py-1.5 text-[#666]
+                     hover:border-[#FF6B00] hover:text-[#FF6B00] transition-all font-mono text-[10px]">
+                ✕ Close
+            </button>
+        </div>
+    </div>
+
+    <div class="p-6">
+        <!-- MARKETS SCREEN -->
+        <div id="screen-markets" class="tab-screen">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3" id="panel-market-grid">
+                {% include "partials/_command_market_grid.html" %}
+            </div>
+            <p class="mt-4 font-mono text-[10px] text-[#333] tracking-wide">
+                ⚠ Live market data powered by yfinance library.
+            </p>
+        </div>
+
+        <!-- WEATHER SCREEN -->
+        <div id="screen-weather" class="tab-screen hidden">
+            <div class="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-5">
+                <div id="panel-weather-big">
+                    {% include "partials/_command_weather_big.html" %}
+                </div>
+                <div class="flex flex-col gap-3">
+                    <!-- Geo Status Mock -->
+                    <div class="bg-white/[0.02] border border-white/7 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                            <div class="font-mono text-[10px] text-[#555] tracking-widest mb-1.5">Location Status</div>
+                            <div class="flex items-center gap-2">
+                                <div class="live-dot"
+                                    style="background:#facc15; box-shadow:0 0 0 0 rgba(250,204,21,.5);"></div>
+                                <span class="text-sm text-[#facc15]">Global Mode</span>
+                                <span class="text-[11px] text-[#555]"> — location not shared</span>
+                            </div>
+                        </div>
+                        <button class="btn-orange text-[11px] px-4 py-2">Share Location</button>
+                    </div>
+                    <!-- Forecast Mock -->
+                    <div class="bg-white/[0.02] border border-white/7 rounded-xl p-4 flex-1">
+                        <div class="font-mono text-[10px] text-[#555] tracking-widest mb-3.5">5-Day Forecast</div>
+                        <div class="flex flex-col gap-2.5">
+                            <div class="flex items-center justify-between py-2 border-b border-white/4">
+                                <span class="font-mono text-[11px] text-[#FF6B00] w-11">Today</span>
+                                <span class="text-lg">⛅</span>
+                                <span class="text-white text-sm font-semibold">31°</span>
+                                <span class="text-[#555] text-xs">27°</span>
+                                <div class="w-20 h-1 bg-white/6 rounded-sm overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-[#FF6B00] to-orange-400"
+                                        style="width: 70%;"></div>
+                                </div>
+                            </div>
+                            <!-- Add 4 more mocks if needed -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INTEL SCREEN -->
+        <div id="screen-intel" class="tab-screen hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="panel-intel-grid">
+                {% include "partials/_command_intel_grid.html" %}
+            </div>
+        </div>
+    </div>
+</div>

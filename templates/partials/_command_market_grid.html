@@ -1,0 +1,27 @@
+{% for m in mkts %}
+<div class="mkt-card">
+    <div class="flex justify-between mb-2">
+        <span class="font-mono text-[10px] text-[#555] tracking-widest">{{ m.label }}</span>
+        <span
+            class="text-[9px] bg-white/4 border border-white/7 rounded-[4px] px-1.5 py-0.5 text-[#444] font-mono tracking-wider">
+            {{ m.sector }}
+        </span>
+    </div>
+    <div class="font-mono text-xl font-medium text-white mb-1.5 tracking-tight animate-flipIn">
+        {{ m.price_fmt }}
+    </div>
+    <div class="flex justify-between items-end">
+        <div
+            class="flex items-center gap-1.5 font-mono text-[12px] font-semibold {% if m.up %}text-green-400{% else %}text-red-400{% endif %}">
+            {% if m.up %}▲{% else %}▼{% endif %} {{ m.change_abs }}%
+        </div>
+        <!-- Simple sparkline placeholder -->
+        <svg width="60" height="24" class="opacity-40">
+            <polyline
+                points="0,{% if m.up %}20 10,15 20,18 30,10 40,12 50,5{% else %}5 10,12 20,10 30,18 40,15 50,22{% endif %}"
+                fill="none" stroke="{% if m.up %}#4ade80{% else %}#f87171{% endif %}" stroke-width="1.5"
+                stroke-linecap="round" />
+        </svg>
+    </div>
+</div>
+{% endfor %}

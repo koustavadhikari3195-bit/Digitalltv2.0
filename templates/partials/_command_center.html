@@ -1,27 +1,81 @@
-<!-- Command Center — loads async, never blocks paint -->
-<div id="command-center"
-     hx-get="/widgets/live/"
-     hx-trigger="load delay:500ms"
-     hx-swap="innerHTML"
-     hx-vals='js:{lat: window._geo?.lat || "", lon: window._geo?.lon || ""}'
-     hx-headers='{"X-Widget-Client": "1"}'
-     class="w-full bg-[#0A0A0A] border-b border-white/5 py-2 px-6 text-xs text-[#A0A0A0]
-            font-mono overflow-hidden">
-  <span class="animate-pulse">● Initializing command center...</span>
+<!-- Always-on Command Bar -->
+<div id="command-bar"
+  class="fixed top-0 left-0 right-0 z-[1000] bg-[#060606] border-b border-[#FF6B00]/18 shadow-[0_2px_40px_rgba(0,0,0,0.8)] animate-barIn">
+
+  <!-- Top accent line -->
+  <div class="h-[2px] bg-gradient-to-r from-[#FF6B00] via-[#FF6B00]/40 to-transparent animate-scanLeft"></div>
+
+  <div class="flex items-stretch h-[48px] font-mono overflow-hidden">
+
+    <!-- Brand Cell -->
+    <div class="flex items-center gap-2.5 px-5 border-r border-white/6 flex-shrink-0 min-w-[160px]">
+      <div class="live-dot orange"></div>
+      <span class="font-display font-black text-[13px] tracking-widest text-[#FF6B00]">DIGITALLY</span>
+      <span class="text-[9px] text-[#333] tracking-widest uppercase mt-0.5">CMD</span>
+    </div>
+
+    <!-- Clock Cell -->
+    <div class="flex flex-col justify-center px-4.5 gap-0.5 border-r border-white/6 flex-shrink-0 min-w-[100px]">
+      <div id="clk-ist" class="text-xs font-medium text-white tracking-wider">--:-- IST</div>
+      <div id="clk-utc" class="text-[9px] text-[#444] tracking-widest">--:-- UTC</div>
+    </div>
+
+    <!-- Weather Cell (Clickable to reveal panel) -->
+    <div id="cmd-weather-cell" hx-get="/widgets/live/" hx-trigger="load delay:500ms" hx-target="#ticker-move-target"
+      hx-swap="innerHTML"
+      class="flex items-center gap-2.5 px-4.5 border-r border-white/6 flex-shrink-0 cursor-pointer hover:bg-[#FF6B00]/5 transition-colors">
+      <span id="bar-weather-icon" class="text-lg">🌍</span>
+      <div>
+        <div class="text-[13px] text-white font-medium">
+          <span id="bar-weather-temp">--</span>°C
+          <span id="bar-weather-city" class="text-[#555] text-[10px] ml-1.5">Shared</span>
+        </div>
+        <div id="bar-weather-desc" class="text-[9px] text-[#444]">Detecting...</div>
+      </div>
+    </div>
+
+    <!-- Scrolling Ticker Container -->
+    <div id="cmd-ticker-container" class="flex-1 overflow-hidden relative flex items-center cursor-pointer"
+      onclick="CommandCenter.togglePanel()">
+      <!-- Fades -->
+      <div
+        class="absolute left-0 top-0 bottom-0 w-10 z-10 bg-gradient-to-r from-[#060606] to-transparent pointer-events-none">
+      </div>
+      <div
+        class="absolute right-0 top-0 bottom-0 w-10 z-10 bg-gradient-to-l from-[#060606] to-transparent pointer-events-none">
+      </div>
+
+      <div id="ticker-move-target" class="ticker-move">
+        <!-- Ticker items will be loaded via AJAX from /widgets/live/ -->
+        <span class="px-5 text-[#444] text-[11px] animate-pulse">● Loading market data...</span>
+      </div>
+    </div>
+
+    <!-- Expand Toggle -->
+    <button id="cmd-expand-btn"
+      class="border-none border-l border-white/6 text-[#555] px-4.5 flex flex-col items-center justify-center gap-1 hover:text-[#FF6B00] hover:bg-[#FF6B00]/6 transition-all">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        class="transition-transform duration-300">
+        <path d="M19 9l-7 7-7-7" />
+      </svg>
+      <span class="text-[9px] uppercase tracking-widest">CMD</span>
+    </button>
+  </div>
 </div>
 
+<!-- Add the panel below -->
+{% include "partials/_command_panel.html" %}
+
 <script>
-// Grab geolocation BEFORE the HTMX trigger fires
-window._geo = {};
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      window._geo = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-      // Retrigger with actual coords
-      htmx.trigger(document.getElementById('command-center'), 'load');
-    },
-    () => { /* denied — widget will use fallback data */ },
-    { timeout: 3000 }
-  );
-}
+  // Geolocation persistence
+  window._geo = window._geo || {};
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        window._geo = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        // Optional: trigger refresh
+      },
+      () => { }, { timeout: 3000 }
+    );
+  }
 </script>
